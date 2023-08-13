@@ -1,0 +1,49 @@
+
+<!DOCTYPE HTML>
+<html>
+ <head>
+ <meta charset="UTF-8">
+  <link rel="stylesheet" href="//cdn.webix.com/edge/webix.css" type="text/css"> 
+  <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script>  
+ </head>
+ <body>
+   <script type="text/javascript" charset="utf-8">
+webix.ui(
+ {cols:[
+	 //forma
+	{width:300,view:'form',id:'forma',elements:[
+		{view:'text',id:'Nivel',name:'Nivel',label:'Nivel'},
+		{view:'text',id:'Titulo',name:'Titulo',label:'Titulo',labelWidth:120},
+		{view:'combo',id:'Ao',name:'Ao',label:'Año',options:["1972","1994"]},
+		{view:'text',id:'Votos',name:'Votos',label:'Votos'},
+		{view:'button',id:'Boton',value:'Entrar',click:mostrar}
+	]},
+	//tabla
+    {rows:[
+    	{view:"datatable",id:'Tabla',select:"row",
+    	 columns:[
+    	        { id:"Nivel", header:"", width:50,sort:'int'},
+    	        { id:"Titulo", header:["Pelicula",{content:"textFilter"}], width:200, 
+    	        	fillspace:true,sort:'string'},
+    	        { id:"Ao", header:"Produccion", width:80,sort:'int'},
+    	        { id:"Votos", header:"Votos", width:100,sort:'int'}
+    	 ],
+    	 url: "datos.json"
+    	}
+    ]}	
+]}	
+   );
+   
+$$('forma').bind($$('Tabla'));
+   
+   function mostrar() {
+	   webix.alert('Los valores de la forma son:' + 
+			   $$('Usuario').getValue() + " " +
+			   $$('Password').getValue() + " " +
+			   $$('Servidores').getValue()
+			   );
+   }
+
+   </script>
+ </body>
+</html>
