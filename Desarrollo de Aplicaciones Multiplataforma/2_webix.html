@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE HTML>
 <html>
  <head>
@@ -12,8 +13,9 @@ webix.ui(
  {cols:[
 	 //forma
 	{width:300,view:'form',id:'forma',elements:[
+		{view:'text',name:'Accion',id:'Accion',value:'',hidden:true},
 		{view:'text',id:'Nivel',name:'Nivel',label:'Nivel'},
-		{view:'text',id:'Titulo',name:'Titulo',label:'Titulo',labelWidth:120},
+		{view:'text',id:'Titulo',name:'Titulo',label:'Titulo',labelWidth:120,required:true},
 		{view:'combo',id:'Ao',name:'Ao',label:'Año',options:["1972","1994"]},
 		{view:'text',id:'Votos',name:'Votos',label:'Votos'},
 		{view:'button',id:'Boton',value:'Entrar',click:mostrar}
@@ -28,21 +30,26 @@ webix.ui(
     	        { id:"Ao", header:"Produccion", width:80,sort:'int'},
     	        { id:"Votos", header:"Votos", width:100,sort:'int'}
     	 ],
-    	 url: "datos.json"
+    	 url: "resultados.php"
     	}
     ]}	
 ]}	
    );
    
 $$('forma').bind($$('Tabla'));
-   
-   function mostrar() {
-	   webix.alert('Los valores de la forma son:' + 
-			   $$('Usuario').getValue() + " " +
-			   $$('Password').getValue() + " " +
-			   $$('Servidores').getValue()
-			   );
-   }
+
+function mostrar() {
+	$$('Accion').setValue('Guardar');
+	if($$('forma').validate()) {
+		webix.ajax().post('controlador.php',$$('forma').getValues(), 
+		function() {
+			$$('Tabla').clearAll();
+			$$('Tabla').load('resultados.php');
+			$$('forma').clear();
+		});
+	}
+	
+}
 
    </script>
  </body>
