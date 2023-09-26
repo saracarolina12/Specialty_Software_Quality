@@ -8,38 +8,42 @@
  <body>
    <script type="text/javascript" charset="utf-8">
 webix.ui(
- {cols:[
-	 //forma
-	{width:300,view:'form',id:'forma',elements:[
-		{view:'text',name:'id',id:'id',value:'',hidden:true},
-		{view:'text',name:'Accion',id:'Accion',value:'',hidden:true},
-		{view:'text',id:'Nivel',name:'Nivel',label:'Nivel'},
-		{view:'text',id:'Titulo',name:'Titulo',label:'Titulo',labelWidth:120,required:true},
-		{view:'combo',id:'Ao',name:'Ao',label:'Año',options:["1972","1994"]},
-		{view:'text',id:'Votos',name:'Votos',label:'Votos'},
-		{cols:[
-			{view:'button',id:'BotonNuevo',value:'Nuevo',click:nuevo},
-			{},
-			{view:'button',id:'BotonGuardar',value:'Guardar',click:mostrar},
-			{view:'button',id:'BotonModificar',value:'Modificar',click:modificar,hidden:true}
-		]}
-	]},
-	//tabla
-    {rows:[
-    	{view:'button',id:'BotonBorrar',value:'Borrar',click:borrar},
-    	{view:"datatable",id:'Tabla',select:"row",multiselect:true,
-    	 columns:[
-    	        { id:"Nivel", header:"", width:50,sort:'int'},
-    	        { id:"Titulo", header:["Pelicula",{content:"textFilter"}], width:200, 
-    	        	fillspace:true,sort:'string'},
-    	        { id:"Ao", header:"Produccion", width:80,sort:'int'},
-    	        { id:"Votos", header:"Votos", width:100,sort:'int'}
-    	 ],
-    	 url: "http://dapp.enlacenet.net:8088/buscar"
-    	}
-    ]}	
-]}	
-   );
+			{
+				cols: [
+					//forma
+					{
+						width: 300, view: 'form', id: 'forma', elements: [
+							{ view: 'text', name: 'Nombre', id: 'Nombre', label: 'Nombre' },
+							{ view: 'text', name: 'Telefono', id: 'Telefono', label: 'Telefono', labelWidth: 120, required: true },
+							{ view: 'text', name: 'Edad', id: 'Edad', label: 'Edad' },
+							{
+								cols: [
+									{ view: 'button', id: 'BotonNuevo', value: 'Nuevo', click: nuevo },
+									{},
+									{ view: 'button', id: 'BotonGuardar', value: 'Guardar', click: mostrar },
+									{ view: 'button', id: 'BotonModificar', value: 'Modificar', click: modificar, hidden: true },
+								]
+							},
+							{ view: 'button', id: 'Delete', value: 'Delete', click: borrar },
+						]
+					},
+					//tabla
+					{
+						rows: [
+							{
+								view: "datatable", id: 'Tabla', select: "row", multiselect: true,
+								columns: [
+									{ id: "Nombre", header: ["Nombre", { content: "textFilter" }], width: 200, sort: 'string', fillspace: true },
+									{ id: "Telefono", header: "Telefono", width: 80, sort: 'string' },
+									{ id: "Edad", header: "Edad", width: 100, sort: 'int' }
+								],
+								url: "http://dapp.enlacenet.net:8088/buscar",
+							}
+						]
+					}
+				]
+			}
+		);
    
 $$('forma').bind($$('Tabla'));
 
@@ -65,11 +69,11 @@ function borrar() {
 	webix.confirm('Estas seguro de eliminar las filas: ' + idFilas).then(function(resultado){
         if(resultado) {
         	webix.ajax().post('http://dapp.enlacenet.net:8088/borrar',
-        			{'Accion':'Borrar','id':idFilas},
-        			function() {
-        				$$('Tabla').clearAll();
-        				$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
-        			}
+				{'Accion':'Borrar','id':idFilas},
+				function() {
+					$$('Tabla').clearAll();
+					$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
+				}
         	);
         } 
     });
