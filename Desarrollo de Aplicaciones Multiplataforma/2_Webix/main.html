@@ -53,9 +53,11 @@ $$('Tabla').attachEvent("onAfterSelect", function(selection, preserve){
 });
 
 function mostrar() {
-	$$('Accion').setValue('Guardar');
+	// $$('Accion').setValue('Guardar');
 	if($$('forma').validate()) {
-		webix.ajax().post('http://dapp.enlacenet.net:8088/guardar',$$('forma').getValues(), 
+		var valores = JSON.stringify($$('forma').getValues())
+		alert(valores)
+		webix.ajax().post('http://dapp.enlacenet.net:8088/guardar',{datos: valores}, 
 		function() {
 			$$('Tabla').clearAll();
 			$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');

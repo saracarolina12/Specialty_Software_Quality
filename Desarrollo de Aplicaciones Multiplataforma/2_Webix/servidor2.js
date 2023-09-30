@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 var cors = require('cors');
 const port = 8088;
+const bodyParser = require('body-parser')
 
 const uri = "mongodb://localhost:27017";
 const cliente = new MongoClient(uri);
@@ -19,7 +20,6 @@ async function insertar(datos, res) {
         await cliente.close();
 
     }
-
 }
 
 async function modificar(datosBusqueda, datos, res) {
@@ -61,9 +61,9 @@ async function buscar(datosBusqueda, res) {
 }
 
 app.use(cors());
-app.use(express.json())
-
-app.use(express.urlencoded({
+// app.use(express.json())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
     extended: true
 }));
 
@@ -81,7 +81,7 @@ app.post('/buscar', (req, res) => {
 });
 
 app.get('/buscar', (req, res) => {
-    buscar({},res); //.catch(console.error);
+    buscar({}, res); //.catch(console.error);
 })
 
 app.get('/', (req, res) => {
