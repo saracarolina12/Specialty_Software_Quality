@@ -27,21 +27,15 @@
           const { Map } = await google.maps.importLibrary("maps");
           const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
+          const directionsService = new google.maps.DirectionsService();
+          const directionsRenderer = new google.maps.DirectionsRenderer();
+
           // The map, centered at Uluru
           map = new Map(document.getElementById("map"), {
             zoom: 4,
             center: position,
             mapId: "DEMO_MAP_ID",
           });
-
-          /*
-          // The marker, positioned at Uluru
-          const marker = new AdvancedMarkerView({
-            map: map,
-            position: position,
-            title: "UP Bonaterra",
-          });
-          */
           const marker = new google.maps.Marker({
             position: position,
             icon: 'http://dapp.enlacenet.net/roberto/marcador.png',
@@ -56,7 +50,19 @@
             map: map,
             title: "Altaria"
           });
+
+          directionsRenderer.setMap(map);
+          calcula(directionsService, directionsRenderer, position, coordenadasAltaria);
         }
+        function calcula(directionsService, directionsRenderer, origen, destino){
+          directionsService.route({
+            origin: origen, destination: destino,
+            travelMode: google.maps.TravelMode.DRIVING,
+          }).then((response) =>{
+            directionsRenderer.setDirections(response);
+          }).catch((e)=> window.alert("Directions request failed due to " + status));
+        }
+
         initMap();
       </script>
     </body>
