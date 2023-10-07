@@ -8,42 +8,38 @@
  <body>
    <script type="text/javascript" charset="utf-8">
 webix.ui(
-			{
-				cols: [
-					//forma
-					{
-						width: 300, view: 'form', id: 'forma', elements: [
-							{ view: 'text', name: 'Nombre', id: 'Nombre', label: 'Nombre' },
-							{ view: 'text', name: 'Telefono', id: 'Telefono', label: 'Telefono', labelWidth: 120, required: true },
-							{ view: 'text', name: 'Edad', id: 'Edad', label: 'Edad' },
-							{
-								cols: [
-									{ view: 'button', id: 'BotonNuevo', value: 'Nuevo', click: nuevo },
-									{},
-									{ view: 'button', id: 'BotonGuardar', value: 'Guardar', click: mostrar },
-									{ view: 'button', id: 'BotonModificar', value: 'Modificar', click: modificar, hidden: true },
-								]
-							},
-							{ view: 'button', id: 'Delete', value: 'Delete', click: borrar },
-						]
-					},
-					//tabla
-					{
-						rows: [
-							{
-								view: "datatable", id: 'Tabla', select: "row", multiselect: true,
-								columns: [
-									{ id: "Nombre", header: ["Nombre", { content: "textFilter" }], width: 200, sort: 'string', fillspace: true },
-									{ id: "Telefono", header: "Telefono", width: 80, sort: 'string' },
-									{ id: "Edad", header: "Edad", width: 100, sort: 'int' }
-								],
-								url: "http://dapp.enlacenet.net:8088/buscar",
-							}
-						]
-					}
-				]
-			}
-		);
+ {cols:[
+	 //forma
+	{width:300,view:'form',id:'forma',elements:[
+		{view:'text',id:'Nombre',name:'Nombre',label:'Nombre'},
+		{view:'text',id:'Telefono',name:'Telefono',label:'Telefono',labelWidth:120,required:true},
+		{view:'text',id:'Edad',name:'Edad',label:'Edad'},
+		{view:'text',id:'Género',name:'Género',label:'Género'},
+		{view:'text',id:'País',name:'País',label:'País'},
+		{cols:[
+			{view:'button',id:'BotonNuevo',value:'Nuevo',click:nuevo},
+			{},
+			{view:'button',id:'BotonGuardar',value:'Guardar',click:mostrar},
+			{view:'button',id:'BotonModificar',value:'Modificar',click:modificar,hidden:true}
+		]}
+	]},
+	//tabla
+    {rows:[
+    	{view:'button',id:'BotonBorrar',value:'Borrar',click:borrar},
+    	{view:"datatable",id:'Tabla',select:"row",multiselect:true,
+    	 columns:[
+    	        { id:"Nombre", header:["Nombre",{content:"textFilter"}], width:200, 
+    	        	fillspace:true,sort:'string'},
+    	        { id:"Telefono", header:"Telefono", width:80,sort:'string'},
+    	        { id:"Edad", header:"Edad", width:100,sort:'int'},
+				{ id:"Género", header:"Género", width:100,sort:'int'},
+				{ id:"País", header:"País", width:100,sort:'int'}
+    	 ],
+    	 url: "http://dapp.enlacenet.net:8088/buscar"
+    	}
+    ]}	
+]}	
+   );
    
 $$('forma').bind($$('Tabla'));
 
@@ -53,30 +49,30 @@ $$('Tabla').attachEvent("onAfterSelect", function(selection, preserve){
 });
 
 function mostrar() {
-	// $$('Accion').setValue('Guardar');
 	if($$('forma').validate()) {
-		var valores = JSON.stringify($$('forma').getValues())
-		alert(valores)
-		webix.ajax().post('http://dapp.enlacenet.net:8088/guardar',{datos: valores}, 
+		var valores = $$('forma').getValues();
+		//valores = JSON.stringify(valores);
+		webix.ajax().post('http://dapp.enlacenet.net:8088/guardar',{datos:valores}, 
 		function() {
 			$$('Tabla').clearAll();
 			$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
 			$$('forma').clear();
 		});
+		
 	}	
 }
 
 function borrar() {
-	var idFilas = $$('Tabla').getSelectedId(true,true);
-	webix.confirm('Estas seguro de eliminar las filas: ' + idFilas).then(function(resultado){
+	webix.confirm('Estas seguro de eliminar la coincidencia nombre: ' + $$('Nombre').getValue()).then(function(resultado){
         if(resultado) {
-        	webix.ajax().post('http://dapp.enlacenet.net:8088/borrar',
-				{'Accion':'Borrar','id':idFilas},
-				function() {
-					$$('Tabla').clearAll();
-					$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
-				}
+        	var valores = {'Nombre':$$('Nombre').getValue()};
+        	webix.ajax().post('http://dapp.enlacenet.net:8088/borrar',{datosBusqueda:valores},
+        			function() {
+        				$$('Tabla').clearAll();
+        				$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
+        			}
         	);
+        	
         } 
     });
 }
@@ -88,9 +84,9 @@ function nuevo() {
 }
 
 function modificar() {
-	$$('Accion').setValue('Modificar');
 	if($$('forma').validate()) {
-		webix.ajax().post('http://dapp.enlacenet.net:8088/modificar',$$('forma').getValues(), 
+		var valores = $$('forma').getValues();
+		webix.ajax().post('http://dapp.enlacenet.net:8088/modificar',{datos:valores,idBusqueda:valores._id}, 
 		function() {
 			$$('Tabla').clearAll();
 			$$('Tabla').load('http://dapp.enlacenet.net:8088/buscar');
