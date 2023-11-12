@@ -33,7 +33,7 @@
 
           // The map, centered at Uluru
           map = new Map(document.getElementById("map"), {
-            zoom: 16,
+            zoom: 4,
             center: position,
             mapId: "DEMO_MAP_ID",
           });
@@ -57,7 +57,7 @@
 
           service.getDistanceMatrix({
             origins: [position], destinations: [coordenadasAltaria], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.METRIC,
-          }, (response, status)=>{ alert(JSON.stringify(response)); });
+          }, (response, status)=>{ alert(JSON.stringify(respone)); });
         }
         function calcula(directionsService, directionsRenderer, origen, destino){
           directionsService.route({
